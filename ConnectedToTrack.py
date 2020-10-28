@@ -24,6 +24,10 @@ class Node:
 	def brack(self):
 		ret = "[{}, {}]".format(self.pt.r, self.pt.c)
 		return ret
+	
+	def norm(self):
+		ret = "{} {}".format(self.pt.r, self.pt.c)
+		return ret
 		
 		
 	def __repr__(self, depth=0):
@@ -231,7 +235,8 @@ def tree_to_track(root: Node, maxDepth: int):
 		children = curr.children
 		
 		ret = ": "*(len(stack)-1)+"{}".format(curr)
-		TRACK.append(Node.brack(curr))
+		#TRACK.append(Node.brack(curr))
+		TRACK.append(Node.norm(curr))
 		
 		#If this node has more children...
 		if (len(children) > 0):
