@@ -198,25 +198,6 @@ def sort_tree(stack: list):
 def tree_to_track(root: Node, maxDepth: int):
 	"""Convert BFS tree to a cartesian Sisyphus table track
 	
-	Notes for improvement: - - - - - - - - - - - - - - - - - - - - - - - - - - 
-	This method may produce more appealing results with the use of two stacks, 
-	 one for parents and one for children, to remove this bobbing effect:
-	(0, 0)
-	: (1, 0)
-	: : (2, 0)
-	: (1, 0)
-	: : (2, 1)
-	: : : (2, 2)
-	: : (2, 1)
-	: : : (1, 2)
-	
-	# TODO
-	Also, this needs to be fixed, as the conditions for return are if the parent
-	 node has no more children and was the parent of a node at maxDepth
-	There is a chance that two lines are equally long and end at maxDepth, and
-	 as such only one of them will be printed, potentially causing MAJOR issues
-	
-	
 	Args:
 		root (Node): BFS tree to perform postorder traversal on
 		maxDepth (int): Maximum depth of the BFS tree 'root'
@@ -230,26 +211,47 @@ def tree_to_track(root: Node, maxDepth: int):
 	stack = []
 	stack.append(root)
 	
+	goingUp = False	#If True and the current node has children, dont print
+	existsChildAbove = None
+	
+	
 	while(len(stack)):
 		curr = stack[len(stack)-1]
 		children = curr.children
 		
-		ret = ": "*(len(stack)-1)+"{}".format(curr)
-		#TRACK.append(Node.brack(curr))
-		TRACK.append(Node.norm(curr))
+		#The existence of an untouched child will tell us not to stop 
+		# if we reach maxDepth
+		if(curr == existsChildAbove):
+			existsChildAbove = None
 		
+		if(len(children) > 1 and existsChildAbove is None):
+			existsChildAbove = children[0]
+		
+		
+		#If we're not moving upward to a node with children...
+		if(not(goingUp and len(children))):
+			ret = ": "*(len(stack)-1)+"{}".format(curr)
+			#TRACK.append(Node.brack(curr))
+			TRACK.append(Node.norm(curr))
+	
+	
+	
 		#If this node has more children...
 		if (len(children) > 0):
 			#Move the last child to the stack
 			stack.append(children.pop())
+			goingUp = False
+				
 		
 		else: #Remove it
 			stack.pop()
-			#If this is the parent of the last node(s), end
-			if (curr.depth == maxDepth-1):
+			goingUp = True
+	
+			#If we've reached maxDepth and touched all nodes, we're done
+			if (curr.depth == maxDepth-1 and existsChildAbove is None):
 				break
-	
-	
+				
+		
 	return TRACK
 
 

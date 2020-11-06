@@ -24,6 +24,7 @@ filename = sys.argv[1]
 
 # load the original image as grayscale
 image = skimage.io.imread(fname=filename, as_gray=True)
+image = image[::-1,:] 		#Flip the track for better results on the table
 
 import time
 startTime = time.time()
