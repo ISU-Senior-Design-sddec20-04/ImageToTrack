@@ -94,5 +94,5 @@ endTime = time.time()
 print("\nScript Runtime: {}\n".format(endTime-startTime))
 
 
-#Save the final edge image for funsies
-io.imsave(fname='result.png', arr=skimage.img_as_int(img))
+#Save the final non-upside-down edge image as a preview
+io.imsave(fname='result.png', arr=skimage.img_as_int(img[::-1,:]))
